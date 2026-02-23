@@ -14,57 +14,100 @@ public class timeMethods {
             this.data = data;
         }
     }
-}
 
-public static void main(String args[]){
+    static int linearsearch(Node[] arr, int n, int target) {
+        for (int i = 0; i < n; i++) {
+            if (arr[i].key == target) return i;
+        }
+        return -1;
+    }
 
-DecimalFormat twoD = new DecimalFormat("0.00");
-DecimalFormat fourD = new DecimalFormat("0.0000");
-DecimalFormat fiveD = new DecimalFormat("0.00000");
+    static int binarysearch(Node[] arr, int n, int target) {
+        int lo = 0, hi = n - 1;
+        while (lo <= hi) {
+            int mid = (lo + hi) / 2;
+            if      (arr[mid].key == target) return mid;
+            else if (arr[mid].key <  target) lo = mid + 1;
+            else                             hi = mid - 1;
+        }
+        return -1;
+    }
 
-long start, finish;
-double runTime = 0, runTime2 = 0, time;
-double totalTime = 0.0;
-int n = N;
-int repetition, repetitions = 30;
+public static void main(String args[])throws IOException {
 
-   runTime = 0;
-   for(repetition = 0; repetition < repetitions; repetition++) {
-      start = System.currentTimeMillis();
-		
-      // call the procedures to time here:
-      linearsearch (...);
-      binarysearch (...);
-      // Figure out how to alter this guideline here,
-		
-      finish = System.currentTimeMillis();
-			
-      time = (double)(finish - start);
-      runTime += time;
-      runTime2 += (time*time); }
+    DecimalFormat twoD = new DecimalFormat("0.00");
+    DecimalFormat fourD = new DecimalFormat("0.0000");
+    DecimalFormat fiveD = new DecimalFormat("0.00000");
 
-   double aveRuntime = runTime/repetitions;
-   double stdDeviation = 
-      Math.sqrt(runTime2 - repetitions*aveRuntime*aveRuntime)/(repetitions-1);
+    long start, finish;
+    double runTime = 0, runTime2 = 0, time;
+    double totalTime = 0.0;
+    int n = N;
 
-   System.out.printf("\n\n\fStatistics\n");
-   System.out.println("________________________________________________");
-   System.out.println("Total time   =           " + runTime/1000 + "s.");
-   System.out.println("Total time\u00b2  =           " + runTime2);
-   System.out.println("Average time =           " + fiveD.format(aveRuntime/1000)
-                     + "s. " + '\u00B1' + " " + fourD.format(stdDeviation) + "ms.");
-   System.out.println("Standard deviation =     " + fourD.format(stdDeviation));
-   System.out.println("n            =           " + n);
-   System.out.println("Average time / run =     " + fiveD.format(aveRuntime/n*1000) 
-                     + '\u00B5' + "s. "); 
+    //Load the data file into the array
+    Node[] records = new Node[n];
+    BufferedReader br = new BufferedReader(new FileReader("ulysses.numbered"));
+    String line;
+    int idx = 0;
+    while ((line = br.readLine()) != null && idx < n) {
+        // Each line: "00001 some text..."
+        int spacePos = line.indexOf(' ');
+        int key;
+        String data;
+        if (spacePos == -1) {
+            key  = Integer.parseInt(line.trim());
+            data = "";
+        } else {
+            key  = Integer.parseInt(line.substring(0, spacePos).trim());
+            data = line.substring(spacePos + 1);
+        }
+        records[idx++] = new Node(key, data);
+    }
+    br.close();
+    System.out.println("Loaded " + idx + " records from ulysses.numbered.");
+    
+    // generate random keys to search for
+    int repetition, repetitions = 30;
+    Random rng = new Random(42);
+    int[] searchKeys = new int[repetitions];
+    for (int i = 0; i < repetitions; i++) {
+        searchKeys[i] = 1 + rng.nextInt(n); // keys in range [1, 32654]
+    }
+    
 
-   System.out.println("Repetitions  =             " + repetitions);
-   System.out.println("________________________________________________");
-   System.out.println();
-   System.out.println(); }	} 
+    // Timing the search procedures
+    runTime = 0;
+    for(repetition = 0; repetition < repetitions; repetition++) {
+        start = System.currentTimeMillis();
+            
+        // call the procedures to time here:
+        linearsearch (...);
+        binarysearch (...);
+        // Figure out how to alter this guideline here,
+            
+        finish = System.currentTimeMillis();
+                
+        time = (double)(finish - start);
+        runTime += time;
+        runTime2 += (time*time); }
 
-static void oneofyourMethods(int n, 
-                       yourMethodParameter1,
-                       yourMethodParameter2, . . . ) {
-// The declarations and body of your method / s   
-// The final statement of this code.} }
+    double aveRuntime = runTime/repetitions;
+    double stdDeviation = 
+        Math.sqrt(runTime2 - repetitions*aveRuntime*aveRuntime)/(repetitions-1);
+
+    System.out.printf("\n\n\fStatistics\n");
+    System.out.println("________________________________________________");
+    System.out.println("Total time   =           " + runTime/1000 + "s.");
+    System.out.println("Total time\u00b2  =           " + runTime2);
+    System.out.println("Average time =           " + fiveD.format(aveRuntime/1000)
+                        + "s. " + '\u00B1' + " " + fourD.format(stdDeviation) + "ms.");
+    System.out.println("Standard deviation =     " + fourD.format(stdDeviation));
+    System.out.println("n            =           " + n);
+    System.out.println("Average time / run =     " + fiveD.format(aveRuntime/n*1000) 
+                        + '\u00B5' + "s. "); 
+
+    System.out.println("Repetitions  =             " + repetitions);
+    System.out.println("________________________________________________");
+    System.out.println();
+    System.out.println(); }	} 
+
