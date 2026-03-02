@@ -1,4 +1,3 @@
-// Code is stored as 13template.java
 import java.lang.Math.*;   import java.io.*;   import java.text.*; import java.util.Random;
 
 public class timeMethods {
